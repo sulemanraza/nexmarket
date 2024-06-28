@@ -12,7 +12,7 @@ const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2024-06-20",
 });
 
-export const schema = z.object({
+const schema = z.object({
   fullName: z.string().min(1, "Full Name is required"),
   streetAddress: z.string().min(1, "Street Address is required"),
   city: z.string().min(1, "City is required"),
@@ -32,7 +32,6 @@ export const schema = z.object({
   coupon: z.string().optional(),
   paymentMethod: z.string(),
 });
-
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
