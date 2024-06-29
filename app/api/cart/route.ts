@@ -1,15 +1,8 @@
 import { type NextRequest } from "next/server";
 import { getCartItem } from "@/server/action/cart/getCartItem";
-import { cookies } from "next/headers";
 
-async function getCookieData() {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      // cookies will be called outside of the async context, causing a build-time error
-      resolve(cookies().getAll());
-    }, 1000)
-  );
-}
+export const dynamic = "force-dynamic"; // defaults to auto
+
 export async function GET(request: NextRequest) {
   try {
     const data = await getCartItem();
