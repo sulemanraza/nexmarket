@@ -13,6 +13,7 @@ import { getAllCategories, getAllProducts } from "@/server/context";
 export default async function Home() {
   const productItems = await getAllProducts();
   const categories = await getAllCategories();
+
   return (
     <Layout>
       <HeroSection />

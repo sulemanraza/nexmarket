@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/client/components/ui/dropdown-menu";
+import axios from "axios";
 
 import Link from "next/link";
 import { ShoppingCartItem } from "@/client/icon";
@@ -16,29 +17,14 @@ import { RootState } from "@/client/redux/store";
 import Image from "next/image";
 
 export function CartNotification() {
-  const dispatch = useDispatch();
   const cartItems: any = useSelector((state: RootState) => state.cart.items);
-
-  React.useEffect(() => {
-    const fetchCartItems = async () => {
-      const request = await fetch("http://localhost:3000/api/cart"); // Fetch cart items from server
-      const data = await request.json();
-
-      if (data) {
-        console.log({ data });
-        dispatch(setCartItems(data.items || []));
-      }
-    };
-
-    fetchCartItems();
-  }, [dispatch]);
 
   console.log({ cartItems });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className=" w-10 cursor-pointer">
-          <ShoppingCartItem count={cartItems.length ? cartItems.length : 0} />
+          <ShoppingCartItem count={cartItems?.length ? cartItems.length : 0} />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit mr-4">
@@ -103,7 +89,7 @@ const NotificationItem = ({
 
         <div>
           <h3 className="text-sm font-semibold text-[#404040] dark:text-white">
-            {title.length > 20 ? `${title.substring(0, 20)}...` : title}
+            {title?.length > 20 ? `${title?.substring(0, 20)}...` : title}
           </h3>
           <p className="text-[#B5B5B5] text-xs font-semibold">{description}</p>
         </div>

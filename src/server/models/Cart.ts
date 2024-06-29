@@ -1,9 +1,11 @@
+// models/Cart.ts
 import mongoose, { Document, Schema } from "mongoose";
 import { IUser } from "./User";
+import { ICartItem } from "./CartItem";
 
 export interface ICart extends Document {
   user: IUser["_id"];
-  items: Array<mongoose.Types.ObjectId>;
+  items: Array<ICartItem["_id"]>;
 }
 
 const CartSchema: Schema = new Schema(

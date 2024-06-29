@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from "mongoose";
+// models/CartItem.ts
+import mongoose, { Schema, Document } from "mongoose";
 
-interface ICartItem extends Document {
+export interface ICartItem extends Document {
   product: mongoose.Types.ObjectId;
   quantity: number;
 }

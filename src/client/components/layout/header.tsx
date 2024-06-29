@@ -1,14 +1,36 @@
-import { SearchIcon, ShoppingCartItem, UserIcon } from "@/client/icon";
+"use client";
+import { SearchIcon } from "@/client/icon";
 import { HeartIcon } from "lucide-react";
 import Link from "next/link";
 import { CartNotification } from "../Product/CartNotification";
 import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
-import { getServerSession } from "next-auth";
-import { getCartItems } from "@/server/action/CartAction";
+import React, { FC } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCartItems } from "@/client/redux/store/slices/cartSlice";
 
-export const Header = async () => {
-  const session = await getServerSession();
+interface props {
+  session: any;
+}
+
+export const Header: FC<props> = ({ session }) => {
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const fetchCartItems = async () => {
+      const request = await axios.get("http://localhost:3000/api/cart"); // Fetch cart items from server
+      const data = await request.data;
+
+      console.log("herder Call", { data });
+
+      if (data) {
+        dispatch(setCartItems(data || []));
+      }
+    };
+
+    fetchCartItems();
+  }, [dispatch]);
 
   return (
     <div className="border-b">
