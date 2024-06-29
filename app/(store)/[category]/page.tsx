@@ -27,11 +27,17 @@ const CategoryPage = async ({ params }: any) => {
             },
           ]}
         />
-        <div className="relative grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {productItems.map((product, index) => (
-            <FlashProduct quickView={false} key={index} item={product} />
-          ))}
-        </div>
+        {productItems.length ? (
+          <div className="relative grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {productItems?.map((product: any, index: number) => (
+              <FlashProduct quickView={false} key={index} item={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center">
+            <h2>No results found</h2>
+          </div>
+        )}
       </div>
     </Layout>
   );

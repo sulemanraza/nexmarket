@@ -11,7 +11,7 @@ import Link from "next/link";
 import { getAllCategories, getAllProducts } from "@/server/context";
 
 export default async function Home() {
-  const productItems = (await getAllProducts()) || [];
+  const productItems = await getAllProducts();
   const categories = await getAllCategories();
 
   return (
@@ -28,7 +28,7 @@ export default async function Home() {
         >
           <div className="relative">
             <ProductCarousel className="grid place-items-center">
-              {productItems?.slice(0, 8).map((product, index) => (
+              {productItems?.slice(0, 8).map((product: any, index: number) => (
                 <FlashProduct
                   key={index}
                   item={product}
@@ -106,7 +106,7 @@ export default async function Home() {
           }
         >
           <div className="relative grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-4">
-            {productItems?.slice(0, 4).map((product, index) => (
+            {productItems?.slice(0, 4).map((product: any, index: number) => (
               <FlashProduct key={index} item={product} />
             ))}
           </div>
@@ -115,8 +115,8 @@ export default async function Home() {
         {/* Our Products  */}
         <SectionHeader title="Our Products" heading="Explore Our Products">
           <div className="relative grid grid-cols-1 gap-4  md:grid-cols-2 lg:grid-cols-4">
-            {productItems?.slice(0, -8).map((item, i) => (
-              <FlashProduct key={i} item={item} showOldPrice={false} />
+            {productItems?.slice(0, -8).map((product: any, index: number) => (
+              <FlashProduct key={index} item={product} showOldPrice={false} />
             ))}
           </div>
         </SectionHeader>

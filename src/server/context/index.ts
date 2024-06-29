@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import Category, { ICategory } from "../models/Category";
 import Product, { IProduct } from "../models/Product";
 import dbConnect from "../utils/db";
+import axios from "axios";
+
+const BASE_URL = process.env.NEXT_APP_URL;
 
 // =============== Helper function to connect to the database =============== //
 const connectToDB = async () => {
@@ -42,10 +45,16 @@ export const getSingleCategory = async (
 };
 
 // ===================== Get all products =========================== //
-export const getAllProducts = async (): Promise<IProduct[]> => {
-  await connectToDB();
-  const productItems = await Product.find({}).lean().populate("category");
-  return productItems as IProduct[];
+export const getAllProducts = async () => {
+  try {
+    const request = await axios.get(BASE_URL + "/api/product");
+    const productItems = await request.data;
+
+    return productItems || [];
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
 };
 
 // ==================== Get a single product by slug =========================== //

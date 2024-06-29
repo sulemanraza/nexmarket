@@ -19,7 +19,7 @@ const Search = async () => {
         {products.length ? (
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
             {/* search results */}
-            {products?.slice(0, 16).map((product, index) => (
+            {products?.slice(0, 16).map((product: any, index: number) => (
               <FlashProduct key={index} item={product} showDelete={false} />
             ))}
           </div>
