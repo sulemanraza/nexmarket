@@ -1,7 +1,6 @@
 import "server-only";
 import { authOptions } from "@/client/lib/authOption";
 import { getServerSession } from "next-auth";
-import Cart from "@/server/models/Cart";
 
 // Import models to ensure they are registered
 import "@/server/models/Product";

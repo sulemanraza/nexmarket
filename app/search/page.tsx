@@ -1,11 +1,11 @@
 import { FlashProduct } from "@/client/components/Product/FlashProduct";
 import Layout from "@/client/components/layout";
 import { SiteBreadcrumb } from "@/client/components/reuseable/SiteBreadcrumb";
-import { getAllProducts } from "@/server/context";
+import { getProducts } from "@/server/action/product/getAllProduct";
 import React from "react";
 
 const Search = async () => {
-  const products = (await getAllProducts()) || [];
+  const products = await getProducts();
 
   return (
     <Layout>
@@ -19,7 +19,7 @@ const Search = async () => {
         {products.length ? (
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
             {/* search results */}
-            {products?.slice(0, 16).map((product: any, index: number) => (
+            {products?.slice(0, 16)?.map((product: any, index: number) => (
               <FlashProduct key={index} item={product} showDelete={false} />
             ))}
           </div>

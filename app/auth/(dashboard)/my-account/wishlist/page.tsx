@@ -10,10 +10,10 @@ import {
   BreadcrumbPage,
 } from "@/client/components/ui/breadcrumb";
 import ProtectRoute from "@/client/utils/ProtectRoute";
-import { getAllProducts } from "@/server/context";
+import { getProducts } from "@/server/action/product/getAllProduct";
 
 const Wishlist = async () => {
-  const productItems = (await getAllProducts()) || [];
+  const product = await getProducts();
 
   return (
     <ProtectRoute>
@@ -49,9 +49,9 @@ const Wishlist = async () => {
             </Button>
           </div>
 
-          {productItems.length ? (
+          {product.length ? (
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {productItems?.slice(0, 4).map((product: any, index: number) => (
+              {product?.slice(0, 4).map((product: any, index: number) => (
                 <FlashProduct
                   key={index}
                   item={product}
@@ -78,8 +78,8 @@ const Wishlist = async () => {
           </div>
 
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {productItems.length &&
-              productItems
+            {product.length &&
+              product
                 ?.slice(0, 4)
                 .map((product: any, index: number) => (
                   <FlashProduct key={index} item={product} />

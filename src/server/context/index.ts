@@ -1,4 +1,4 @@
-import "server-only";
+"use server";
 import mongoose from "mongoose";
 import Category, { ICategory } from "../models/Category";
 import Product, { IProduct } from "../models/Product";
