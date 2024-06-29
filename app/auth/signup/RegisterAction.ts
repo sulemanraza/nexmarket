@@ -2,6 +2,7 @@
 
 import User from "@/server/models/User";
 import dbConnect from "@/server/utils/db";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 // Define the registration schema using zod
@@ -56,11 +57,11 @@ export async function registerAction(
     };
   }
 
-  // const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
     email,
-    password: password as string,
+    password: hashedPassword,
     role: "user",
     emailVerified: false,
   });

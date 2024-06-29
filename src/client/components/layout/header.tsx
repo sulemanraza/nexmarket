@@ -6,7 +6,6 @@ import { CartNotification } from "../Product/CartNotification";
 import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
 import React, { FC } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setCartItems } from "@/client/redux/store/slices/cartSlice";
 
@@ -19,18 +18,14 @@ export const Header: FC<props> = ({ session }) => {
 
   React.useEffect(() => {
     const fetchCartItems = async () => {
-      const request = await axios.get("http://localhost:3000/api/cart"); // Fetch cart items from server
-      const data = await request.data;
+      const request = await fetch("http://localhost:3000/api/cart"); // Fetch cart items from server
+      const data = await request.json();
 
-      console.log("herder Call", { data });
-
-      if (data) {
-        dispatch(setCartItems(data || []));
-      }
+      dispatch(setCartItems(data || []));
     };
 
-    fetchCartItems();
-  }, [dispatch]);
+    session && fetchCartItems();
+  }, [dispatch, session]);
 
   return (
     <div className="border-b">

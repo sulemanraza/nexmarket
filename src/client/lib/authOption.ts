@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import dbConnect from "@/server/utils/db";
 import User, { IUser } from "@/server/models/User";
-
+import bcrypt from "bcryptjs";
 // Extend the Session and JWT types to include custom properties
 declare module "next-auth" {
   interface Session {
@@ -44,7 +44,14 @@ export const authOptions: NextAuthOptions = {
 
         const user = await User.findOne({ email: email });
 
-        if (user && user.password === password) {
+        if (!user) {
+          console.error("User not found with email:", email);
+          return null;
+        }
+        const passwordMatches = bcrypt.compareSync(password, user.password);
+        console.log({ user, passwordMatches });
+
+        if (passwordMatches) {
           if (user.isBlocked) {
             throw new Error("Your account has been blocked.");
           }
