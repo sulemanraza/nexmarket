@@ -1,6 +1,5 @@
 import { FlashProduct } from "@/client/components/Product/FlashProduct";
 import { Button } from "@/client/components/ui/button";
-import { products } from "@/server/db";
 import { removeWishlistItem } from "@/server/action/productActions";
 import {
   Breadcrumb,
@@ -14,7 +13,7 @@ import ProtectRoute from "@/client/utils/ProtectRoute";
 import { getAllProducts } from "@/server/context";
 
 const Wishlist = async () => {
-  const productItems = await getAllProducts();
+  const productItems = (await getAllProducts()) || [];
 
   return (
     <ProtectRoute>
@@ -50,16 +49,22 @@ const Wishlist = async () => {
             </Button>
           </div>
 
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {productItems.slice(0, 4).map((product, index) => (
-              <FlashProduct
-                key={index}
-                item={product}
-                showDelete={true}
-                deleteItem={removeWishlistItem} // delete item function
-              />
-            ))}
-          </div>
+          {productItems.length ? (
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {productItems?.slice(0, 4).map((product, index) => (
+                <FlashProduct
+                  key={index}
+                  item={product}
+                  showDelete={true}
+                  deleteItem={removeWishlistItem} // delete item function
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center">
+              <h2>No items in wishlist</h2>
+            </div>
+          )}
         </div>
 
         <div className="space-y-8">
@@ -73,9 +78,12 @@ const Wishlist = async () => {
           </div>
 
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {productItems.slice(0, 4).map((product, index) => (
-              <FlashProduct key={index} item={product} />
-            ))}
+            {productItems.length &&
+              productItems
+                ?.slice(0, 4)
+                .map((product, index) => (
+                  <FlashProduct key={index} item={product} />
+                ))}
           </div>
         </div>
       </div>

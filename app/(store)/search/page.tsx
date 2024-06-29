@@ -5,7 +5,7 @@ import { getAllProducts } from "@/server/context";
 import React from "react";
 
 const Search = async () => {
-  const products = await getAllProducts();
+  const products = (await getAllProducts()) || [];
 
   return (
     <Layout>
@@ -13,15 +13,21 @@ const Search = async () => {
         <SiteBreadcrumb links={[{ title: "Search" }]} />
         <h1 className="flex items-center gap-2">
           <strong>Search Page</strong>
-          <span>({products.length} results found)</span>
+          <span>({products?.length} results found)</span>
         </h1>
 
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-          {/* search results */}
-          {products.slice(0, 16).map((product, index) => (
-            <FlashProduct key={index} item={product} showDelete={false} />
-          ))}
-        </div>
+        {products.length ? (
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+            {/* search results */}
+            {products?.slice(0, 16).map((product, index) => (
+              <FlashProduct key={index} item={product} showDelete={false} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center">
+            <h2>No results found</h2>
+          </div>
+        )}
       </div>
     </Layout>
   );
