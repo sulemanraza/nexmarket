@@ -51,7 +51,7 @@ const Wishlist = async () => {
 
           {productItems.length ? (
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {productItems?.slice(0, 4).map((product, index) => (
+              {productItems?.slice(0, 4).map((product: any, index: number) => (
                 <FlashProduct
                   key={index}
                   item={product}
@@ -81,7 +81,7 @@ const Wishlist = async () => {
             {productItems.length &&
               productItems
                 ?.slice(0, 4)
-                .map((product, index) => (
+                .map((product: any, index: number) => (
                   <FlashProduct key={index} item={product} />
                 ))}
           </div>
