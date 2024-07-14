@@ -8,6 +8,9 @@ import { IProduct } from "@/server/models/Product";
 import { AddToCartButton } from "@/client/components/reuseable/AddToCartButton";
 import { addToWishlist } from "@/server/action/wishlist/addToWishlist";
 import { WishlistButton } from "./WishlistButton";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/client/lib/authOption";
+import { redirect } from "next/navigation";
 
 interface Props {
   item: IProduct;
@@ -19,7 +22,7 @@ interface Props {
   quickView?: boolean;
 }
 
-export const FlashProduct: FC<Props> = ({
+export const FlashProduct: FC<Props> = async ({
   item,
   showOldPrice = true,
   showDelete = false,
@@ -38,13 +41,17 @@ export const FlashProduct: FC<Props> = ({
     stock,
     isInWishlist,
   } = item;
-
+  const session = await getServerSession(authOptions); // Validate the session
   const getDiscount = (price: number, oldPrice: number) => {
     return ((oldPrice - price) / oldPrice) * 100;
   };
 
   const handleWishlistItem = async () => {
     "use server";
+
+    if (!session) {
+      return redirect("/auth/login");
+    }
 
     const formData = new FormData();
     formData.append("productId", _id);

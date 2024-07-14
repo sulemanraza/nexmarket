@@ -5,6 +5,8 @@ import WishlistItem from "@/server/models/WishlistItem";
 import dbConnect from "@/server/utils/db";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 const schema = z.object({
   productId: z.string(),
@@ -15,7 +17,10 @@ export const addToWishlist = async (formData: FormData) => {
     const session = await getServerSession(authOptions); // Validate the session
 
     if (!session || !session.user) {
-      throw new Error("Unauthorized");
+      return {
+        success: false,
+        error: "You must be logged in to add to wishlist",
+      };
     }
 
     // Parse and validate the form data

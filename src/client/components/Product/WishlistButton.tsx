@@ -20,7 +20,15 @@ export const WishlistButton: FC<props> = ({
 
   const handleWishlistItem = async () => {
     const response = await onSubmit();
-    console.log({ response });
+
+    if (response.error) {
+      toast({
+        title: "Error",
+        description: response.error,
+        variant: "error",
+      });
+    }
+
     if (response) {
       toast({
         title: "Update wishlist",
