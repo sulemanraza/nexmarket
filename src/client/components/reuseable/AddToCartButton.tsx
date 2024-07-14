@@ -1,3 +1,4 @@
+"use client";
 import { useDispatch } from "react-redux";
 import { setCartItems } from "../../redux/store/slices/cartSlice";
 import { FC } from "react";

@@ -10,6 +10,7 @@ import { createWishlistItem } from "@/server/action/productActions";
 import Link from "next/link";
 import { getProducts } from "@/server/action/product/getAllProduct";
 import { getCategories } from "@/server/action/category/getCategories";
+import { addToWishlist } from "@/server/action/wishlist/addToWishlist";
 
 export default async function Home() {
   const product = await getProducts();
@@ -33,7 +34,7 @@ export default async function Home() {
                 <FlashProduct
                   key={index}
                   item={product}
-                  createWishlistItem={createWishlistItem} // create wishlist item function
+                  createWishlistItem={addToWishlist} // create wishlist item function
                 />
               ))}
             </ProductCarousel>

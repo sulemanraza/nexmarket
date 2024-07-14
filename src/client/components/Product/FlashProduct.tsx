@@ -1,12 +1,13 @@
-"use client";
-import { DeleteBox, HeartIcon, StarFill, StarHalf } from "@/client/icon";
+"use server";
+import { StarFill, StarHalf } from "@/client/icon";
 import Image from "next/image";
 import { FC } from "react";
-import { useToast } from "../ui/use-toast";
 import Link from "next/link";
 import ProductModel from "./ProductModel";
 import { IProduct } from "@/server/models/Product";
 import { AddToCartButton } from "@/client/components/reuseable/AddToCartButton";
+import { addToWishlist } from "@/server/action/wishlist/addToWishlist";
+import { WishlistButton } from "./WishlistButton";
 
 interface Props {
   item: IProduct;
@@ -22,12 +23,11 @@ export const FlashProduct: FC<Props> = ({
   item,
   showOldPrice = true,
   showDelete = false,
-  deleteItem,
-  createWishlistItem,
   addToCart,
   quickView = true,
 }: any) => {
   const {
+    _id,
     thumbnail,
     name,
     slug,
@@ -36,36 +36,22 @@ export const FlashProduct: FC<Props> = ({
     numReviews,
     category,
     stock,
+    isInWishlist,
   } = item;
-
-  const { toast } = useToast();
 
   const getDiscount = (price: number, oldPrice: number) => {
     return ((oldPrice - price) / oldPrice) * 100;
   };
 
-  const handleCreateWishlistItem = async () => {
-    await createWishlistItem({
-      ...item,
-    });
+  const handleWishlistItem = async () => {
+    "use server";
 
-    toast({
-      title: "Item added to wishlist",
-      description: "You can view your wishlist in the wishlist page",
-      variant: "success",
-    });
-  };
+    const formData = new FormData();
+    formData.append("productId", _id);
 
-  const handleDeleteItem = async () => {
-    await deleteItem({
-      ...item,
-    });
+    const response = await addToWishlist(formData);
 
-    toast({
-      title: "Item removed from wishlist",
-      description: "You can view your wishlist in the wishlist page",
-      variant: "error",
-    });
+    return response;
   };
 
   return (
@@ -85,9 +71,15 @@ export const FlashProduct: FC<Props> = ({
         />
 
         <div className=" absolute right-4 top-4 flex flex-col gap-3">
-          <div>
+          {/* <div>
             {showDelete ? (
-              <form action={handleDeleteItem}>
+              <form
+                action={async () => {
+                  const formData = new FormData();
+                  formData.append("productId", _id);
+                  await addToWishlist(formData);
+                }}
+              >
                 <button
                   type="submit"
                   className="w-[34px] h-[34px] rounded-full bg-white grid place-items-center cursor-pointer"
@@ -96,7 +88,13 @@ export const FlashProduct: FC<Props> = ({
                 </button>
               </form>
             ) : (
-              <form action={handleCreateWishlistItem}>
+              <form
+                action={async () => {
+                  const formData = new FormData();
+                  formData.append("productId", _id);
+                  await addToWishlist(formData);
+                }}
+              >
                 <button
                   type="submit"
                   className="w-[34px] h-[34px] rounded-full bg-white hover:text-white hover:bg-brand grid place-items-center cursor-pointer group"
@@ -105,7 +103,13 @@ export const FlashProduct: FC<Props> = ({
                 </button>
               </form>
             )}
-          </div>
+          </div> */}
+
+          <WishlistButton
+            showDelete={showDelete}
+            hasWishlist={isInWishlist}
+            onSubmit={handleWishlistItem}
+          />
           <div className="hidden lg:block">
             <ProductModel product={item} />
           </div>

@@ -9,8 +9,9 @@ import "@/server/models/Cart";
 import "@/server/models/Order";
 import dbConnect from "@/server/utils/db";
 import Cart from "@/server/models/Cart";
+import Wishlist from "@/server/models/Wishlist";
 
-export async function getCartItem() {
+export async function getWishlistProduct() {
   try {
     const session = await getServerSession(authOptions);
 
@@ -26,22 +27,19 @@ export async function getCartItem() {
       throw new Error("Database connection failed");
     }
 
-    const cartItems = await Cart.findOne({ user: userId }).populate({
-      path: "items",
+    const products = await Wishlist.findOne({ user: userId })
+      .populate({
+        path: "items",
 
-      populate: {
-        path: "product",
-        select: "name price thumbnail",
-      },
-    });
+        populate: {
+          path: "product",
+        },
+      })
+      .lean();
 
-    if (!cartItems) {
-      throw new Error("Cart not found");
-    }
-
-    return cartItems;
+    return products || [];
   } catch (error) {
-    console.error("Error fetching cart items:", error);
+    console.error("Error fetching wishlist items:", error);
     throw new Error("Internal Server Error");
   }
 }

@@ -7,12 +7,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/client/components/ui/dropdown-menu";
-import axios from "axios";
 
 import Link from "next/link";
 import { ShoppingCartItem } from "@/client/icon";
-import { setCartItems } from "@/client/redux/store/slices/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/client/redux/store";
 import Image from "next/image";
 

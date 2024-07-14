@@ -9,9 +9,10 @@ interface IOrder extends Document {
   }>;
   shippingAddress: {
     fullName: string;
-    streetAddress: string;
+    street: string;
     city: string;
     postalCode: string;
+    country: string;
     phone: string;
   };
   email: string;
@@ -20,11 +21,20 @@ interface IOrder extends Document {
   discount: number;
   coupon?: string;
   paymentMethod: string;
+  paymentId: string;
   paymentDetails: {
     paymentIntentId?: string;
     paymentMethod?: string;
   };
-  status: string;
+  status:
+    | "Pending"
+    | "Processing"
+    | "Shipped"
+    | "Delivered"
+    | "Cancelled"
+    | "Refunded"
+    | "Returned"
+    | string;
 }
 
 const OrderSchema: Schema = new Schema(
@@ -43,9 +53,10 @@ const OrderSchema: Schema = new Schema(
     ],
     shippingAddress: {
       fullName: { type: String, required: true },
-      streetAddress: { type: String, required: true },
+      street: { type: String, required: true },
       city: { type: String, required: true },
       postalCode: { type: String, required: true },
+      country: { type: String },
       phone: { type: String, required: true },
     },
     email: { type: String, required: true },
@@ -54,11 +65,24 @@ const OrderSchema: Schema = new Schema(
     discount: { type: Number, required: true },
     coupon: { type: String },
     paymentMethod: { type: String, required: true },
+    paymentId: { type: String, required: true },
     paymentDetails: {
       paymentIntentId: { type: String },
       paymentMethod: { type: String },
     },
-    status: { type: String, default: "Pending" },
+    status: {
+      type: String,
+      enum: [
+        "Pending",
+        "Processing",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+        "Refunded",
+        "Returned",
+      ],
+      default: "Pending",
+    },
   },
   {
     timestamps: true,

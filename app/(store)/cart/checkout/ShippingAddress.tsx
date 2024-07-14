@@ -1,5 +1,7 @@
 "use client";
-import { FaCcPaypal, FaCcStripe } from "react-icons/fa6";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import CountryList from "@/server/db/countryList.json";
 import React, { FC } from "react";
 import { Button } from "@/client/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -16,14 +18,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Checkbox } from "@/client/components/ui/checkbox";
 import { Label } from "@/client/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/client/components/ui/select";
 
 export const schema = z.object({
   fullName: z.string().min(1, "Full Name is required"),
-  streetAddress: z.string().min(1, "Street Address is required"),
+  phone: z.string().min(7, "Phone Number is required"),
+  email: z.string().email("Invalid email address"),
+  street: z.string().min(1, "Street Address is required"),
   city: z.string().min(1, "City is required"),
   postalCode: z.string().min(1, "Postal Code is required"),
-  phone: z.string().min(1, "Phone Number is required"),
-  email: z.string().email("Invalid email address"),
+  country: z.string().min(1, "Country is required"),
   saveAddress: z.boolean().default(false),
   paymentMethod: z.enum(["Paypal", "stripe"]).default("stripe"),
 });
@@ -37,15 +47,18 @@ export const ShippingAddress: FC<ShippingAddressProps> = ({ onSubmit }) => {
     resolver: zodResolver(schema),
     defaultValues: {
       fullName: "",
-      streetAddress: "",
-      city: "",
-      postalCode: "",
       phone: "",
       email: "",
+      street: "",
+      city: "",
+      postalCode: "",
+      country: "",
       saveAddress: false,
       paymentMethod: "stripe",
     },
   });
+
+  console.log("form.watch('phone')", form.watch("phone"));
 
   return (
     <Form {...form}>
@@ -62,8 +75,8 @@ export const ShippingAddress: FC<ShippingAddressProps> = ({ onSubmit }) => {
         <InputFiled
           form={form}
           label="Street Address"
-          id="streetAddress"
-          name="streetAddress"
+          id="street"
+          name="street"
         />
         <InputFiled form={form} label="City" id="city" name="city" />
         <InputFiled
@@ -72,8 +85,62 @@ export const ShippingAddress: FC<ShippingAddressProps> = ({ onSubmit }) => {
           id="postalCode"
           name="postalCode"
         />
-        <InputFiled form={form} label="Phone" id="phone" name="phone" />
+
+        <FormField
+          control={form.control}
+          name={"phone"}
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Phone</FormLabel>
+              <FormControl>
+                <PhoneInput
+                  inputStyle={{
+                    borderRadius: "0.375rem",
+                    padding: "0.5rem",
+                    backgroundColor: "#F5F5F5",
+                    border: "1px solid #D9D9D9",
+                    width: "95%",
+                  }}
+                  defaultCountry={"US"}
+                  value={form.watch("phone")}
+                  onChange={(phone) => form.setValue("phone", phone)}
+                  required
+                />
+              </FormControl>
+              <FormMessage className="text-xs" />
+            </FormItem>
+          )}
+        />
+
         <InputFiled form={form} label="Email" id="email" name="email" />
+
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a  Country" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {CountryList.map((country, index) => {
+                    return (
+                      <SelectItem key={index} value={country.name}>
+                        {country.name}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

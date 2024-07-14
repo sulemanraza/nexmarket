@@ -45,11 +45,9 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({ email: email });
 
         if (!user) {
-          console.error("User not found with email:", email);
           return null;
         }
         const passwordMatches = bcrypt.compareSync(password, user.password);
-        console.log({ user, passwordMatches });
 
         if (passwordMatches) {
           if (user.isBlocked) {
@@ -108,15 +106,26 @@ export const authOptions: NextAuthOptions = {
         return true;
       }
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = (user as IUser).id;
         token.role = (user as IUser).role;
         token.emailVerified = (user as IUser).emailVerified;
       }
+
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+
+        await User.findOneAndUpdate(
+          { _id: token.id },
+          { name: session.name },
+          { new: true }
+        );
+      }
+
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token, trigger }) {
       if (token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;

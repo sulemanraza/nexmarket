@@ -5,6 +5,7 @@ import { z } from "zod";
 import Product from "@/server/models/Product";
 import Stripe from "stripe";
 import Order from "@/server/models/Order";
+import User from "@/server/models/User";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY as string;
 
@@ -14,7 +15,7 @@ const stripe = new Stripe(stripeSecretKey, {
 
 const schema = z.object({
   fullName: z.string().min(1, "Full Name is required"),
-  streetAddress: z.string().min(1, "Street Address is required"),
+  street: z.string().min(1, "Street Address is required"),
   city: z.string().min(1, "City is required"),
   postalCode: z.string().min(1, "Postal Code is required"),
   phone: z.string().min(1, "Phone Number is required"),
@@ -31,7 +32,9 @@ const schema = z.object({
   discount: z.number().nonnegative("Discount must be a non-negative number"),
   coupon: z.string().optional(),
   paymentMethod: z.string(),
+  saveAddress: z.boolean(),
 });
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -49,7 +52,7 @@ export async function POST(request: Request) {
 
     const {
       fullName,
-      streetAddress,
+      street,
       city,
       postalCode,
       phone,
@@ -59,14 +62,23 @@ export async function POST(request: Request) {
       shipping,
       discount,
       coupon,
+      saveAddress,
     } = parsedData.data;
 
     await dbConnect();
 
     const userId = session.user.id;
+    const user = await User.findById(userId).populate("addresses");
+
+    // Check if user exists in database
+    if (!user) {
+      return new Response("User not found", { status: 404 });
+    }
+
     const verifiedCartItems = [];
     let calculatedTotalPrice = 0;
 
+    // Verify cart items
     for (const item of cartItems) {
       const product = await Product.findById(item.product);
 
@@ -88,10 +100,12 @@ export async function POST(request: Request) {
     calculatedTotalPrice -= discount;
     calculatedTotalPrice += shipping;
 
+    // Check if total price is correct
     if (calculatedTotalPrice !== totalPrice) {
       return new Response("Invalid total price", { status: 400 });
     }
 
+    // Create line items for Stripe
     const lineItems = verifiedCartItems.map((item) => ({
       price_data: {
         currency: "usd",
@@ -103,6 +117,7 @@ export async function POST(request: Request) {
       quantity: item.quantity,
     }));
 
+    // Create Stripe checkout session
     const stripeSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
@@ -112,11 +127,13 @@ export async function POST(request: Request) {
       customer_email: email,
     });
 
+    console.log("Stripe session:", stripeSession);
+
     // Save initial order with status "Pending"
     await Order.create({
       user: userId,
       items: verifiedCartItems,
-      shippingAddress: { fullName, streetAddress, city, postalCode, phone },
+      shippingAddress: { fullName, street, city, postalCode, phone },
       email,
       total: totalPrice,
       shipping,
@@ -127,6 +144,22 @@ export async function POST(request: Request) {
       status: "Pending",
     });
 
+    // Save address if user wants to save it
+    if (saveAddress) {
+      if (user.addresses.length >= 3) {
+        // skip over saving address if user already has 3 addresses
+
+        return new Response(JSON.stringify({ id: stripeSession.id }), {
+          status: 200,
+        });
+      }
+
+      return new Response(JSON.stringify({ id: stripeSession.id }), {
+        status: 200,
+      });
+    }
+
+    // Return session ID
     return new Response(JSON.stringify({ id: stripeSession.id }), {
       status: 200,
     });

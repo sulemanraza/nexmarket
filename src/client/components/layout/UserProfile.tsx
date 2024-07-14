@@ -18,12 +18,12 @@ import { signOut } from "next-auth/react";
 const menuItems = [
   {
     title: "Manage Account",
-    path: "/auth/manage-account",
+    path: "/auth/my-account/profile",
     icon: <User />,
   },
   {
     title: "Change Password",
-    path: "/auth/change-password",
+    path: "/auth/profile/my-account/change-password",
     icon: <KeyRound />,
   },
 ];

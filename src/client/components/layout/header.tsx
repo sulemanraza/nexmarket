@@ -7,7 +7,10 @@ import UserProfile from "./UserProfile";
 import { Button } from "../ui/button";
 import React, { FC } from "react";
 import { useDispatch } from "react-redux";
-import { setCartItems } from "@/client/redux/store/slices/cartSlice";
+import {
+  setCartItems,
+  setIsLoading,
+} from "@/client/redux/store/slices/cartSlice";
 
 interface props {
   session: any;
@@ -18,10 +21,24 @@ export const Header: FC<props> = ({ session }) => {
 
   React.useEffect(() => {
     const fetchCartItems = async () => {
-      const request = await fetch("http://localhost:3000/api/cart"); // Fetch cart items from server
-      const data = await request.json();
+      try {
+        dispatch(setIsLoading(true));
 
-      dispatch(setCartItems(data || []));
+        const request = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart`
+        ); // Fetch cart items from server
+
+        // Fetch cart items from server
+        const data = await request.json();
+
+        if (data.length) {
+          dispatch(setCartItems(data));
+          dispatch(setIsLoading(false));
+        }
+      } catch (error) {
+        console.error(error);
+        dispatch(setIsLoading(false));
+      }
     };
 
     session && fetchCartItems();
