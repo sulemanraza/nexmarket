@@ -3,7 +3,7 @@ import { ChangeAddress } from "./Form";
 import User from "@/server/models/User";
 import { z } from "zod";
 
-export const addressSchema = z.object({
+const addressSchema = z.object({
   phone: z.string().optional(),
   street: z.string().min(1, "Street Address is required"),
   city: z.string().min(1, "City is required"),
@@ -15,7 +15,6 @@ const Address = async () => {
   const session = await getServerSession();
   const address = await User.findOne({ email: session?.user?.email });
 
-  console.log(address);
   const updateAddress = async (data: FormData) => {
     "use server";
 
@@ -32,8 +31,6 @@ const Address = async () => {
     }
 
     const { phone, street, city, postalCode, country } = validate.data;
-
-    console.log({ phone, street, city, postalCode, country });
 
     await User.findOneAndUpdate(
       { email: session?.user?.email },
