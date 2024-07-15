@@ -42,11 +42,11 @@ export const SignUpForm = () => {
             id="name"
             placeholder="Name"
             autoComplete="off"
-            className="w-full border-0 outline-none focus:border-b-brand border-b-2 h-11  border-gray-300  transition-all duration-300 ease-in-out"
+            className={`w-full border-0 outline-none focus:border-b-brand  border-b-2 h-11  border-gray-300  transition-all duration-300 ease-in-out`}
           />
 
           {state.errors?.name && (
-            <span className="text-red-500">{state.errors.name}</span>
+            <span className="text-red-500 text-xs">{state.errors.name}</span>
           )}
         </div>
         <div>
@@ -59,7 +59,7 @@ export const SignUpForm = () => {
             className="w-full border-0 outline-none focus:border-b-brand border-b-2 h-11  border-gray-300  transition-all duration-300 ease-in-out"
           />
           {state.errors?.email && (
-            <span className="text-red-500">{state.errors.email}</span>
+            <span className="text-red-500 text-xs">{state.errors.email}</span>
           )}
         </div>
         <div>
@@ -72,7 +72,9 @@ export const SignUpForm = () => {
             className="w-full border-0 outline-none focus:border-b-brand border-b-2 h-11  border-gray-300  transition-all duration-300 ease-in-out"
           />
           {state.errors?.password && (
-            <span className="text-red-500">{state.errors.password}</span>
+            <span className="text-red-500 text-xs">
+              {state.errors.password}
+            </span>
           )}
         </div>
         <div className="flex flex-col  gap-4">

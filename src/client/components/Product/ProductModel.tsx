@@ -13,12 +13,15 @@ import { ItemPicker } from "../reuseable/ItemPicker";
 
 import { useToast } from "../ui/use-toast";
 import { AddToCartButton } from "../reuseable/AddToCartButton";
+import { WishlistButton } from "./WishlistButton";
 
 interface Props {
   product: any;
+  hasWishlist: boolean;
+  onSubmit: any;
 }
 
-const ProductModel = ({ product }: Props) => {
+const ProductModel = ({ product, hasWishlist, onSubmit }: Props) => {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("");
@@ -116,9 +119,12 @@ const ProductModel = ({ product }: Props) => {
                       className="bg-brand min-w-[165px] w-full max-w-[55%] h-11 hover:bg-brand hover:bg-opacity-90 rounded-md text-white"
                     />
 
-                    <div className="w-10 h-10 border hover:border-brand hover:bg-brand cursor-pointer group border-black rounded-md grid place-items-center">
-                      <HeartIcon className="w-6 h-6 group-hover:text-white" />
-                    </div>
+                    <WishlistButton
+                      showDelete={false}
+                      hasWishlist={hasWishlist}
+                      onSubmit={onSubmit}
+                      className="w-10 h-10 border hover:border-brand hover:bg-brand cursor-pointer group border-black rounded-md grid place-items-center"
+                    />
                   </div>
                 </div>
               </DialogDescription>

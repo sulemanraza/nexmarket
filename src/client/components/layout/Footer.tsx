@@ -96,8 +96,13 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="w-full text-center py-8">
-        <p className="text-white">© 2024 NexMarket. All Rights Reserved.</p>
+      <div className="w-full text-center py-8 border-t border-gray-900">
+        <p className="text-white">
+          © 2024 NexMarket. All Rights Reserved. Developed by{" "}
+          <Link href="https://www.sulemanraza.com" className="hover:text-brand">
+            Suleman Raza
+          </Link>
+        </p>
       </div>
     </footer>
   );

@@ -17,12 +17,10 @@ import {
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z
-    .string({
-      message:
-        "Password must be at least 8 characters long and contain at least one number",
-    })
-    .min(8),
+  password: z.string().min(8, {
+    message:
+      "Password must be at least 8 characters long and contain at least one number",
+  }),
 });
 
 const LoginForm = () => {
@@ -34,16 +32,36 @@ const LoginForm = () => {
       password: "",
     },
   });
+
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      console.log({ values });
-      const user = await signIn("credentials", {
+      const user: any = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
+
+      if (user.error) {
+        const error = JSON.parse(user.error);
+
+        if (error.email) {
+          form.setError("email", {
+            type: "server",
+            message: error.email,
+          });
+
+          return;
+        } else if (error.password) {
+          form.setError("password", {
+            type: "server",
+            message: error.password,
+          });
+
+          return;
+        }
+      }
 
       // If no error, redirect to home page
       toast({
@@ -52,7 +70,7 @@ const LoginForm = () => {
         variant: "success",
       });
 
-      window.location.href = "/";
+      return (window.location.href = "/");
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +101,7 @@ const LoginForm = () => {
                       className="w-full border-0 outline-none focus:border-b-brand border-b-2 h-11  border-gray-300  transition-all duration-300 ease-in-out"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
@@ -105,7 +123,7 @@ const LoginForm = () => {
                     />
                   </FormControl>
 
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />

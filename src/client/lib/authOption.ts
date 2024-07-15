@@ -45,13 +45,29 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({ email: email });
 
         if (!user) {
-          return null;
+          throw new Error(
+            JSON.stringify({
+              email: "User with this email does not exist.",
+            })
+          );
         }
         const passwordMatches = bcrypt.compareSync(password, user.password);
 
+        if (!passwordMatches) {
+          throw new Error(
+            JSON.stringify({
+              password: "Password is incorrect.",
+            })
+          );
+        }
+
         if (passwordMatches) {
           if (user.isBlocked) {
-            throw new Error("Your account has been blocked.");
+            throw new Error(
+              JSON.stringify({
+                email: "Your account has been blocked.",
+              })
+            );
           }
           user.lastLogin = new Date();
           await user.save();
@@ -67,7 +83,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log("here is error", {
+        user,
+        account,
+        profile,
+        email,
+        credentials,
+      });
+
       if (!account) {
         throw new Error("Account is null.");
       }

@@ -118,7 +118,11 @@ export const FlashProduct: FC<Props> = async ({
             onSubmit={handleWishlistItem}
           />
           <div className="hidden lg:block">
-            <ProductModel product={item} />
+            <ProductModel
+              product={item}
+              hasWishlist={isInWishlist}
+              onSubmit={handleWishlistItem}
+            />
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 "use client";
-import { DeleteBox, HeartIcon, StarFill, StarHalf } from "@/client/icon";
+import { DeleteBox, HeartIcon } from "@/client/icon";
 import { FC } from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -8,12 +8,14 @@ interface props {
   onSubmit: any;
   hasWishlist: boolean;
   showDelete?: boolean;
+  className?: string;
 }
 
 export const WishlistButton: FC<props> = ({
   showDelete,
   onSubmit,
   hasWishlist,
+  className,
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -40,7 +42,7 @@ export const WishlistButton: FC<props> = ({
     }
   };
   return (
-    <div>
+    <>
       <form action={handleWishlistItem}>
         {hasWishlist && showDelete ? (
           <button
@@ -52,14 +54,16 @@ export const WishlistButton: FC<props> = ({
         ) : (
           <button
             type="submit"
-            className={`w-[34px] h-[34px] rounded-full ${
-              hasWishlist ? "bg-brand text-white" : "bg-white"
-            } hover:text-white hover:bg-brand grid place-items-center cursor-pointer group`}
+            className={` ${hasWishlist ? "bg-brand text-white" : "bg-white"} ${
+              className
+                ? className
+                : "w-[34px] h-[34px] rounded-full hover:text-white hover:bg-brand grid place-items-center cursor-pointer group"
+            } `}
           >
             <HeartIcon />
           </button>
         )}
       </form>
-    </div>
+    </>
   );
 };
