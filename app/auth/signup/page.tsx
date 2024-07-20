@@ -7,7 +7,6 @@ import { SignUpForm } from "./SignUpForm";
 
 const SignUp = async () => {
   const session = await getServerSession();
-  console.log({ session });
 
   if (session) {
     return redirect("/");

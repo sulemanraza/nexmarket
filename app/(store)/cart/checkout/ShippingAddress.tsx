@@ -58,8 +58,6 @@ export const ShippingAddress: FC<ShippingAddressProps> = ({ onSubmit }) => {
     },
   });
 
-  console.log("form.watch('phone')", form.watch("phone"));
-
   return (
     <Form {...form}>
       <form

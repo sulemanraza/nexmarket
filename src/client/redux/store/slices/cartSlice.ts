@@ -42,10 +42,6 @@ export const cartSlice = createSlice({
       );
 
       state.totalPrice = state.items.reduce((acc, item) => {
-        console.log("Adding item to total price:", item);
-        console.log(
-          `Adding ${item.quantity} * ${item.product.price} to total price.`
-        );
         return acc + item.quantity * item.product.price;
       }, 0);
     },
@@ -56,15 +52,12 @@ export const cartSlice = createSlice({
       );
 
       state.totalPrice = state.items.reduce((acc, item) => {
-        console.log(
-          `Updating total price with ${item.quantity} * ${item.product.price}.`
-        );
         return acc + item.quantity * item.product.price;
       }, 0);
 
-      // Debugging logs
-      console.log("Updated Total Items:", state.totalItems);
-      console.log("Updated Total Price:", state.totalPrice);
+      // // Debugging logs
+      // console.log("Updated Total Items:", state.totalItems);
+      // console.log("Updated Total Price:", state.totalPrice);
     },
 
     setIsLoading(state, action: PayloadAction<boolean>) {

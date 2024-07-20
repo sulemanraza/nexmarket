@@ -5,7 +5,7 @@ import ProfileForm from "./ProfileForm";
 
 const Profile = async () => {
   const session = await getServerSession();
-  console.log({ session });
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">

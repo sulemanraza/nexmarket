@@ -17,7 +17,6 @@ import Image from "next/image";
 export function CartNotification() {
   const cartItems: any = useSelector((state: RootState) => state.cart.items);
 
-  console.log({ cartItems });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

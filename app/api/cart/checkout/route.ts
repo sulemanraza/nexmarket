@@ -127,7 +127,7 @@ export async function POST(request: Request) {
       customer_email: email,
     });
 
-    console.log("Stripe session:", stripeSession);
+    // console.log("Stripe session:", stripeSession);
 
     // Save initial order with status "Pending"
     await Order.create({

@@ -29,8 +29,6 @@ export async function registerAction(
   prevState: RegistrationState,
   formData: FormData
 ): Promise<RegistrationState> {
-  console.log({ data: formData });
-
   const validatedFields = registerSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),

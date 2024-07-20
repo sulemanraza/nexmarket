@@ -26,7 +26,7 @@ export default async function Home() {
           title="Today’s"
           heading="Flash Sales"
           headerStyle="flex flex-col justify-start md:flex-row items-center md:justify-between gap-8"
-          headerChildren={<FlashTimer endTime={"2024-06-25T00:00:00"} />}
+          headerChildren={<FlashTimer endTime={"2024-07-25T00:00:00"} />}
         >
           <div className="relative">
             <ProductCarousel className="grid place-items-center">

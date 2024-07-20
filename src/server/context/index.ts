@@ -4,6 +4,7 @@ import Category, { ICategory } from "../models/Category";
 import Product, { IProduct } from "../models/Product";
 import dbConnect from "../utils/db";
 import axios from "axios";
+import Review, { IReview } from "../models/Review";
 
 const BASE_URL = process.env.NEXT_APP_URL;
 
@@ -61,8 +62,28 @@ export const getAllProducts = async () => {
 export const getSingleProduct = async (
   slug: string
 ): Promise<(IProduct & { category: ICategory }) | null> => {
-  await connectToDB();
-  const product = await Product.findOne({ slug }).lean().populate("category");
+  await dbConnect();
+  const product: any = await Product.findOne({ slug })
+    .lean()
+    .populate("category");
+
+  if (!product) return null;
+
+  const reviewStats = await Review.aggregate([
+    { $match: { product: product._id } },
+    {
+      $group: {
+        _id: "$product",
+        averageRating: { $avg: "$star" },
+        numReviews: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const stats = reviewStats[0] || { averageRating: 0, numReviews: 0 };
+  product.rating = stats.averageRating;
+  product.numReviews = stats.numReviews;
+
   return (product as IProduct & { category: ICategory }) || null;
 };
 
@@ -96,4 +117,21 @@ export const getProductsByCategory = async (
     .populate("category");
 
   return productItems as IProduct[];
+};
+
+// ==================== Get products by Reviews =========================== //
+export const getProductsReviews = async (
+  productId: string
+): Promise<IReview[]> => {
+  await connectToDB();
+  const productItems = await Review.find({
+    product: new mongoose.Types.ObjectId(productId),
+  })
+    .lean()
+    .populate({
+      path: "user",
+      select: "name",
+    });
+
+  return productItems as IReview[];
 };

@@ -4,11 +4,7 @@ import { OrderTable } from "./OrderTable";
 const Orders = async () => {
   const Order = await getOrders();
 
-  return (
-    <div>
-      <OrderTable data={Order || []} />
-    </div>
-  );
+  return <OrderTable data={Order || []} />;
 };
 
 export default Orders;

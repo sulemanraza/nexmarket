@@ -22,7 +22,6 @@ const CheckoutSuccess = async ({ searchParams }: props) => {
 
   const order = await Order.findOne({ paymentId: session_id });
 
-  console.log("order", order);
   return (
     <ProtectRoute>
       <section className="py-24 relative">

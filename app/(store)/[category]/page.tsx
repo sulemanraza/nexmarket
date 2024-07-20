@@ -1,7 +1,7 @@
 import { FlashProduct } from "@/client/components/Product/FlashProduct";
 import Layout from "@/client/components/layout";
 import { SiteBreadcrumb } from "@/client/components/reuseable/SiteBreadcrumb";
-import { getSingleCategory } from "@/server/context";
+import { getSingleCategory } from "@/server/action/category/getSingleCategory";
 import { notFound } from "next/navigation";
 import React from "react";
 

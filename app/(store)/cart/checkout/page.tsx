@@ -27,8 +27,6 @@ const Checkout = async () => {
     return redirect("/cart");
   }
 
-  console.log("checkout", cartItems);
-
   return (
     <Layout>
       <div className="container py-10 space-y-10">

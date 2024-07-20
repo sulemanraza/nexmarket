@@ -20,8 +20,6 @@ export const RemoveCartItemButton: FC<Props> = ({
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  console.log(session.data?.user, session.status);
-
   const handleRemoveItem = async () => {
     if (session.status !== "loading" && !session.data?.user) {
       return window.location.replace("/auth/login");
@@ -33,8 +31,6 @@ export const RemoveCartItemButton: FC<Props> = ({
 
       // Remove item from cart
       const data: any = await removeCartItem(formData);
-
-      console.log("Remove item response", data);
 
       if (data) {
         dispatch(setCartItems(data.items));

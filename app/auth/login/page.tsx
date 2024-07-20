@@ -7,7 +7,6 @@ import LoginForm from "./LoginForm";
 
 const Login = async () => {
   const session = await getServerSession();
-  console.log({ session });
 
   if (session) {
     return redirect("/");

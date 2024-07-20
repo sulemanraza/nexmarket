@@ -47,7 +47,6 @@ export function CartTable({ cartItem }: any) {
 
   const handleProceedToCheckout = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Proceed to checkout");
 
     const items = cartItems.map((item: any) => ({
       productId: item.product.id,
@@ -63,8 +62,6 @@ export function CartTable({ cartItem }: any) {
     formData.append("coupon", coupon);
 
     const data = await proceedToCheckout(formData);
-
-    console.log("Proceed to checkout items", data);
 
     if (data) {
       // Redirect to checkout page

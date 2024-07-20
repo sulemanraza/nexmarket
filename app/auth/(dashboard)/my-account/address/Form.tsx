@@ -68,7 +68,7 @@ export const ChangeAddress: FC<ShippingAddressProps> = ({
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

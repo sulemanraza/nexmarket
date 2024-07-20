@@ -84,14 +84,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("here is error", {
-        user,
-        account,
-        profile,
-        email,
-        credentials,
-      });
-
       if (!account) {
         throw new Error("Account is null.");
       }

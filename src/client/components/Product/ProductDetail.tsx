@@ -9,6 +9,7 @@ import { ItemPicker } from "../reuseable/ItemPicker";
 import { IProduct } from "@/server/models/Product";
 import { ICategory } from "@/server/models/Category";
 import { AddToCartButton } from "../reuseable/AddToCartButton";
+import { FaRegStarHalfStroke, FaStar } from "react-icons/fa6";
 
 interface ProductDetailProps {
   product: Omit<IProduct, "category"> & { category: ICategory };
@@ -23,6 +24,7 @@ export const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
     slug,
     category,
     numReviews,
+    rating,
     price,
     images,
     colors,
@@ -52,15 +54,10 @@ export const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <StarFill className="w-4 h-4 text-[#FFC700]" />
-              <StarFill className="w-4 h-4 text-[#FFC700]" />
-              <StarFill className="w-4 h-4 text-[#FFC700]" />
-              <StarFill className="w-4 h-4 text-[#FFC700]" />
-              <StarHalf className="w-4 h-4 text-[#FFC700]" />
-            </div>
+            {renderStars(rating)}
             <span>({numReviews} Reviews)</span>
           </div>
+
           <span className="text-sm text-green-500">In Stock</span>
         </div>
 
@@ -127,5 +124,28 @@ export const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+export const renderStars = (rating: any) => {
+  const fullStars = Math.floor(rating);
+  const halfStars = rating % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStars;
+
+  return (
+    <>
+      {Array.from({ length: fullStars }).map((_, index) => (
+        <FaStar key={`full-${index}`} className="fill-yellow-400" />
+      ))}
+      {Array.from({ length: halfStars }).map((_, index) => (
+        <FaRegStarHalfStroke
+          key={`half-${index}`}
+          className="fill-yellow-400"
+        />
+      ))}
+      {Array.from({ length: emptyStars }).map((_, index) => (
+        <FaStar key={`empty-${index}`} className="fill-gray-300 stroke-black" />
+      ))}
+    </>
   );
 };

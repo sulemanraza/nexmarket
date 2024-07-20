@@ -27,7 +27,10 @@ const Address = async () => {
     });
 
     if (!validate.success) {
-      return console.log(validate.error);
+      return {
+        success: false,
+        message: validate.error?.message,
+      };
     }
 
     const { phone, street, city, postalCode, country } = validate.data;

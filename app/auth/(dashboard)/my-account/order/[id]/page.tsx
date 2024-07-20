@@ -1,9 +1,7 @@
 import { PrintButton } from "@/client/components/reuseable/PrintButton";
-import { Button } from "@/client/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -34,8 +32,6 @@ const SingleOrder = async ({ params }: any) => {
     total,
     shipping,
   } = order;
-
-  console.log(items[0]);
 
   return (
     <section className="relative order-details">

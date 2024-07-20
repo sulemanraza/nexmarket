@@ -11,6 +11,8 @@ import { WishlistButton } from "./WishlistButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/client/lib/authOption";
 import { redirect } from "next/navigation";
+import { Star } from "lucide-react";
+import { FaRegStar, FaRegStarHalfStroke, FaStar } from "react-icons/fa6";
 
 interface Props {
   item: IProduct;
@@ -40,7 +42,9 @@ export const FlashProduct: FC<Props> = async ({
     category,
     stock,
     isInWishlist,
+    rating,
   } = item;
+
   const session = await getServerSession(authOptions); // Validate the session
   const getDiscount = (price: number, oldPrice: number) => {
     return ((oldPrice - price) / oldPrice) * 100;
@@ -166,16 +170,33 @@ export const FlashProduct: FC<Props> = async ({
 
         {/* reviews */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <StarFill />
-            <StarFill />
-            <StarFill />
-            <StarFill />
-            <StarHalf />
-          </div>
+          <div className="flex items-center gap-1">{renderStars(rating)}</div>
           <div>({numReviews})</div>
         </div>
       </div>
     </div>
+  );
+};
+
+export const renderStars = (rating: any) => {
+  const fullStars = Math.floor(rating);
+  const halfStars = rating % 1 >= 0.5 ? 1 : 0;
+  const emptyStars = 5 - fullStars - halfStars;
+
+  return (
+    <>
+      {Array.from({ length: fullStars }).map((_, index) => (
+        <FaStar key={`full-${index}`} className="fill-yellow-400" />
+      ))}
+      {Array.from({ length: halfStars }).map((_, index) => (
+        <FaRegStarHalfStroke
+          key={`half-${index}`}
+          className="fill-yellow-400"
+        />
+      ))}
+      {Array.from({ length: emptyStars }).map((_, index) => (
+        <FaStar key={`empty-${index}`} className="fill-gray-300 stroke-black" />
+      ))}
+    </>
   );
 };

@@ -48,8 +48,6 @@ export async function POST(request: NextRequest) {
         },
         { new: true }
       );
-
-      console.log("Order completed:", order);
     }
 
     return new Response("Success!", { status: 200 });

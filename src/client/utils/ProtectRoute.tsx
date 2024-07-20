@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 const ProtectRoute = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession();
 
-  console.log({ session });
-
   if (!session) {
     return redirect("/auth/login");
   }
